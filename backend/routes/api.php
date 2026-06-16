@@ -36,9 +36,13 @@ Route::get('/debug-db', function () {
     }
 
     $laravel_error = null;
+    $tables = [];
     try {
-        \Illuminate\Support\Facades\DB::connection('pgsql')->getPdo();
+        $pdo = \Illuminate\Support\Facades\DB::connection('pgsql')->getPdo();
         $laravel_status = "Connected!";
+        
+        $stmt = $pdo->query("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'");
+        $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
     } catch (\Exception $e) {
         $laravel_status = "Failed!";
         $laravel_error = $e->getMessage();
@@ -46,6 +50,9 @@ Route::get('/debug-db', function () {
 
     return response()->json([
         'pdo_test' => $pdo_status,
+        'laravel_test' => $laravel_status,
+        'laravel_error' => $laravel_error,
+        'tables' => $tables,
         'app_url' => config('app.url'),
         'frontend_url' => config('app.frontend_url'),
         'session_domain' => config('session.domain'),
