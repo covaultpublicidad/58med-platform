@@ -17,6 +17,19 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/debug-db', function () {
+    $pass = env('DB_PASSWORD', '');
+    return response()->json([
+        'host' => env('DB_HOST'),
+        'user' => env('DB_USERNAME'),
+        'pass_length' => strlen($pass),
+        'pass_starts_with' => substr($pass, 0, 2),
+        'pass_ends_with' => substr($pass, -2),
+        'has_hash' => strpos($pass, '#') !== false,
+        'exact_match' => $pass === 'RZ-cQ,XXAEnE.#9'
+    ]);
+});
+
 // Verificación de correo
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
