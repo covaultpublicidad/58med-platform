@@ -46,9 +46,11 @@ Route::get('/debug-db', function () {
 
     return response()->json([
         'pdo_test' => $pdo_status,
-        'pdo_error' => $pdo_error,
-        'laravel_test' => $laravel_status,
-        'laravel_error' => $laravel_error,
+        'app_url' => config('app.url'),
+        'frontend_url' => config('app.frontend_url'),
+        'session_domain' => config('session.domain'),
+        'sanctum_domains' => config('sanctum.stateful'),
+        'cors_allowed' => config('cors.allowed_origins'),
     ]);
 });
 
