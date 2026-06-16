@@ -21,9 +21,6 @@
     }
   ],
   "env": {
-    "DB_HOST": "db.aqqeyuvfudbcdkubgwpv.supabase.co",
-    "DB_PORT": "5432",
-    "DB_USERNAME": "postgres",
     "LOG_CHANNEL": "stderr",
     "VIEW_COMPILED_PATH": "/tmp",
     "APP_CONFIG_CACHE": "/tmp/config.php",
