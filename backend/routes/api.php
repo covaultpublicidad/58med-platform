@@ -19,14 +19,36 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/debug-db', function () {
     $pass = env('DB_PASSWORD', '');
+    $host = env('DB_HOST');
+    $user = env('DB_USERNAME');
+    $port = env('DB_PORT');
+    $db = env('DB_DATABASE');
+
+    $dsn = "pgsql:host=$host;port=$port;dbname=$db;sslmode=require";
+    
+    $pdo_error = null;
+    try {
+        $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $pdo_status = "Connected!";
+    } catch (PDOException $e) {
+        $pdo_status = "Failed!";
+        $pdo_error = $e->getMessage();
+    }
+
+    $laravel_error = null;
+    try {
+        \Illuminate\Support\Facades\DB::connection('pgsql')->getPdo();
+        $laravel_status = "Connected!";
+    } catch (\Exception $e) {
+        $laravel_status = "Failed!";
+        $laravel_error = $e->getMessage();
+    }
+
     return response()->json([
-        'host' => env('DB_HOST'),
-        'user' => env('DB_USERNAME'),
-        'pass_length' => strlen($pass),
-        'pass_starts_with' => substr($pass, 0, 2),
-        'pass_ends_with' => substr($pass, -2),
-        'has_hash' => strpos($pass, '#') !== false,
-        'exact_match' => $pass === 'RZ-cQ,XXAEnE.#9'
+        'pdo_test' => $pdo_status,
+        'pdo_error' => $pdo_error,
+        'laravel_test' => $laravel_status,
+        'laravel_error' => $laravel_error,
     ]);
 });
 
