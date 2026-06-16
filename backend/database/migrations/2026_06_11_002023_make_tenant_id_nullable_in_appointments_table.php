@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('appointments', function (Blueprint $table) {
-            // $table->dropForeign(['tenant_id']);
-            $table->foreignId('tenant_id')->nullable()->change()->constrained('tenants')->onDelete('cascade');
+            $table->unsignedBigInteger('tenant_id')->nullable()->change();
         });
     }
 
