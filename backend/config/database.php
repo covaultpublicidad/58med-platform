@@ -91,7 +91,7 @@ return [
             'port' => '5432',
             'database' => env('DB_DATABASE', 'forge'),
             'username' => 'postgres',
-            'password' => env('DB_PASSWORD', ''),
+            'password' => trim(env('DB_PASSWORD', ''), '"\''),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
